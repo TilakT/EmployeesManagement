@@ -1,0 +1,471 @@
+{% extends "base.html" %}
+{% block title %}Employee Attendance{% endblock %}
+{%block css%}
+<link rel="stylesheet" type="text/css" href="/static/css/test_date_picker.min.css">
+<style type="text/css">
+   #radio_button_types {
+   margin:4px;
+   float:left;
+   }
+   #no_days_leaves {
+   margin:4px;
+   float:left;
+   }
+   .radio_btn {
+   display: inline-block;
+   padding: 6px 150px;
+   margin-bottom: 0;
+   font-size: 14px;
+   font-weight: normal;
+   line-height: 1.42857143;
+   text-align: center;
+   white-space: nowrap;
+   vertical-align: middle;
+   -ms-touch-action: manipulation;
+   touch-action: manipulation;
+   cursor: pointer;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-image: none;
+   border: 1px solid transparent;
+   border-radius: 4px;
+   }
+   #radio_button_types input {
+   visibility:hidden;
+   }
+   #no_days_leaves input {
+   visibility:hidden;
+   }
+   label {
+   cursor: pointer;
+   }
+   #radio_button_types input:checked + span {
+   background: #0061a0;
+   display: inline-block;
+   padding: 6px 12px;
+   margin-bottom: 0;
+   font-size: 14px;
+   font-weight: normal;
+   line-height: 1.42857143;
+   text-align: center;
+   white-space: nowrap;
+   vertical-align: middle;
+   -ms-touch-action: manipulation;
+   touch-action: manipulation;
+   cursor: pointer;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-image: none;
+   border: 1px solid transparent;
+   border-radius: 4px;
+   color: #fff;
+   }
+   #no_days_leaves input:checked + span {
+   background: #0061a0;
+   display: inline-block;
+   padding: 6px 12px;
+   margin-bottom: 0;
+   font-size: 14px;
+   font-weight: normal;
+   line-height: 1.42857143;
+   text-align: center;
+   white-space: nowrap;
+   vertical-align: middle;
+   -ms-touch-action: manipulation;
+   touch-action: manipulation;
+   cursor: pointer;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-image: none;
+   border: 1px solid transparent;
+   border-radius: 4px;
+   color: #fff;
+   }
+   .blue_btn {
+   color: #428bca;
+   background-color: #ffffff;
+   transition: all 0.1s ease;
+   -webkit-transition: all 0.1s ease;
+   -moz-transition: all 0.1s ease;
+   }
+   .radio_button {
+   color: #428bca;
+   background-color: #ffffff;
+   border: #428bca solid 1px;  
+   transition: all 0.1s ease;
+   -webkit-transition: all 0.1s ease;
+   -moz-transition: all 0.1s ease;
+   }
+   .normal_width{
+   width: 100%;   
+   }
+   .leaves_desc_txt{
+   font-size: 13px;
+   font-family: Helvetica;
+   font-style: bold;
+   color: #000000;      
+   }
+   .tip {
+   background: #CCCCCC;
+   border: 1px solid #ccc;
+   padding: 10px;
+   border-radius: 8px;
+   position: relative;
+   width: 100%;
+   margin-bottom: 3%;
+   }
+   .tip:before {
+   position: absolute;
+   display: inline-block;
+   border-top: 7px solid transparent;
+   border-right: 7px solid #CCCCCC;
+   border-bottom: 7px solid transparent;
+   border-right-color: rgba(0, 0, 0, 0.2);
+   left: -14px;
+   top: 20px;
+   content: '';
+   }
+   .tip:after {
+   position: absolute;
+   display: inline-block;
+   border-top: 6px solid transparent;
+   border-right: 6px solid #CCCCCC;
+   border-bottom: 6px solid transparent;
+   left: -12px;
+   top: 21px;
+   content: '';
+   }
+   .back_btn{
+   margin-left: 30%;
+   }
+   .errorlist{
+   color: #F44336;
+   }
+   #select_leaves {
+   margin:4px;
+   float:left;
+   }
+   .select_radio_btn {
+   display: inline-block;
+   padding: 6px 12px;
+   margin-bottom: 0;
+   font-size: 14px;
+   font-weight: normal;
+   line-height: 1.42857143;
+   text-align: center;
+   white-space: nowrap;
+   vertical-align: middle;
+   -ms-touch-action: manipulation;
+   touch-action: manipulation;
+   cursor: pointer;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-image: none;
+   border: 1px solid transparent;
+   border-radius: 4px;
+   }
+   #select_leaves input {
+   visibility:hidden;
+   }
+   label {
+   cursor: pointer;
+   }
+   #select_leaves input:checked + span {
+   background: #0061a0;
+   display: inline-block;
+   padding: 6px 12px;
+   margin-bottom: 0;
+   font-size: 14px;
+   font-weight: normal;
+   line-height: 1.42857143;
+   text-align: center;
+   white-space: nowrap;
+   vertical-align: middle;
+   -ms-touch-action: manipulation;
+   touch-action: manipulation;
+   cursor: pointer;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-image: none;
+   border: 1px solid transparent;
+   border-radius: 4px;
+   color: #fff;
+   }
+   .one_choices{
+   padding-right: 30px;
+   }
+   /*End-Of-File*/
+</style>
+{%endblock%}
+{%block js%}
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/test_date_picker.js"></script>
+<script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+   $(function() {
+     tinyMCE.init({
+         mode:"textareas",
+         width : "720px",
+         height:"200px"
+     });  
+     });
+   $(function(){
+   
+   
+       var nowTemp = new Date();
+       var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+   
+       var checkin = $('.dpd1').datepicker({
+           onRender: function(date) {
+               return date.valueOf() < now.valueOf() ? 'disabled' : '';
+           }
+       }).on('changeDate', function(ev) {
+               if (ev.date.valueOf() > checkout.date.valueOf()) {
+                   var newDate = new Date(ev.date)
+                   newDate.setDate(newDate.getDate() + 1);
+                   checkout.setValue(newDate);
+               }
+               checkin.hide();
+               $('.dpd2')[0].focus();
+           }).data('datepicker');
+       var checkout = $('.dpd2').datepicker({
+           onRender: function(date) {
+               return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+           }
+       }).on('changeDate', function(ev) {
+               checkout.hide();
+           }).data('datepicker');
+   });
+   
+   
+   
+   
+   
+</script>
+<script type="text/javascript">
+   $(function () {
+     $("#sl").hide();
+     $("#wfh").hide();
+     $("#oth").hide();     
+     $("input[name='leave_type']").click(function () {              
+       if ($("#leave_type_0").is(":checked")) {
+         $("#cl").show();     
+       }          
+       else {
+         $("#cl").hide();          
+       }
+     });       
+   });
+   
+   $(function () {   
+     $("input[name='leave_type']").click(function () {            
+       if ($("#leave_type_0").is(":checked")) {
+         $("#cl").show();                     
+       }          
+       else {
+         $("#cl").hide();                          
+       }
+     });       
+   });
+   $(function () {   
+     $("input[name='leave_type']").click(function () {            
+       if ($("#leave_type_1").is(":checked")) {
+         $("#sl").show();                     
+       }          
+       else {
+         $("#sl").hide();                          
+       }
+     });       
+   });
+   $(function () {   
+     $("input[name='leave_type']").click(function () {            
+       if ($("#leave_type_2").is(":checked")) {
+         $("#wfh").show();                     
+       }          
+       else {
+         $("#wfh").hide();                          
+       }
+     });       
+   });
+   $(function () {   
+     $("input[name='leave_type']").click(function () {            
+       if ($("#leave_type_3").is(":checked")) {
+         $("#oth").show();                     
+       }          
+       else {
+         $("#oth").hide();                          
+       }
+     });       
+   });
+   
+</script>
+<script type="text/javascript">
+   $(function () {
+       $("input[name='chkPassPort']").click(function () {
+           if ($("#chkYes").is(":checked")) {
+               $("#dvPassport").show();
+           } else {
+               $("#dvPassport").hide();
+           }
+       });
+   });
+   
+     $(function () {
+       $("input[name='one_or_more_days']").click(function () {
+           if ($("#one_more_0").is(":checked")) {
+               $("#one_date").show();
+           } else {
+               $("#one_date").hide();
+           }
+       });
+   });
+     $(function () {
+       $("input[name='one_or_more_days']").click(function () {
+           if ($("#one_more_1").is(":checked")) {
+               $("#two_date").show();
+           } else {
+               $("#two_date").hide();
+           }
+       });
+   });
+</script>
+<script type="text/javascript">
+   $(document).ready(function () {
+     $('#dp1').datetimepicker({
+           defaultDate: new Date()
+       });
+   });
+</script>
+{%endblock%}
+{% block content %}
+<div class="row">
+   <div class="col-sm-3">
+      <section class="panel">
+         <div class="panel-body">
+            <a href="/attendance/"  class="btn btn-compose">
+            Compose Mail
+            </a>
+            <ul class="nav nav-pills nav-stacked mail-nav">
+               <li ><a href="/attd_view/"> <i class="fa fa-inbox"></i> Waiting for Approval <span class="label label-danger pull-right inbox-notification">{{objs|length}}</span></a></li>
+               <li><a href="/disapproved/"> <i class="fa fa-certificate"></i> Disapproved</a></li>
+               <li><a href="/approved/"> <i class="fa fa-envelope-o"></i> Approved</a></li>
+            </ul>
+         </div>
+      </section>
+   </div>
+   <div class="col-sm-9">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            <h4 > Compose Mail                         
+            </h4>
+         </header>
+         <div class="panel-body">
+            <div class="compose-mail">
+               <form class="form-horizontal" method="POST" action="">
+                  {% csrf_token %}                      
+                  <div class="form-group">
+                     <div id="no_days_leaves" class="pull-right one_choices">
+                        {% for radio in form.one_or_more_days %}
+                        <label class="radio_btn blue_btn">
+                        {{radio.tag}}             
+                        <span>{{ radio.choice_label}}</span>
+                        </label>
+                        {%endfor%}
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <div class="normal_width">
+                        <div id="radio_button_types" class="">
+                           {% for radio in form.leave_type %}
+                           <label class="radio_btn blue_btn">
+                           {{radio.tag}}             
+                           <span title="{{radio.choice_label}}">{{ radio.choice_label}}</span>
+                           </label>
+                           {%endfor%}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-sm-12">
+                     <div id="cl">
+                        <div class="tip">
+                           <p class="leaves_desc_txt text-left">
+                              {{obj.no_of_cl}}
+                           </p>
+                        </div>
+                     </div>
+                     <div id="sl">
+                        <div class="tip">
+                           <p class="leaves_desc_txt text-left">
+                              {{obj.no_of_sl}}
+                           </p>
+                        </div>
+                     </div>
+                     <div id="wfh">
+                        <div class="tip">
+                           <p class="leaves_desc_txt text-left">
+                              {{obj.no_of_wh}}
+                           </p>
+                        </div>
+                     </div>
+                     <div id="oth">
+                        <div class="tip">
+                           <p class="leaves_desc_txt text-left">
+                              oth
+                           </p>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label for="to" class=" label_color" style="margin-left: 2%;">To:</label>
+                     {{form.approver}}
+                  </div>
+                  <div class="form-group">
+                     <label for="subject" class="label_color" style="margin-left: 2%;">Subject:</label>
+                     {{form.email_subject.errors}}
+                     {{form.email_subject}}
+                  </div>
+                  <div class="form-group" id="one_date">
+                     <label class="label_color" style="margin-left: 2%;">One day</label>
+                     <div class="col-sm-6" >
+                        {{form.one_date.errors}}
+                        {{form.one_date}}
+                     </div>
+                  </div>
+                  <div class="form-group" id="two_date">
+                     <label class="label_color" style="margin-left: 2%;">From Date</label>
+                     <div class="col-sm-4">
+                        {{form.from_date.errors}}
+                        {{form.from_date}}
+                     </div>
+                     <label class="label_color">To Date</label>
+                     <div class="col-sm-4">
+                        {{form.to_date.errors}}
+                        {{form.to_date}}
+                     </div>
+                  </div>
+                  <div class="compose-editor">
+                     {{form.reason.errors}}
+                     {{form.reason}}
+                  </div>
+                  <div class="compose-btn">
+                     <button class="btn btn-primary btn-lg" type="submit" id="add" value="submit" title="Submit">Send</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

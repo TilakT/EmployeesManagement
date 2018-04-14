@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Pending Task{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-12">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            Pending Task                      
+         </header>
+         <div class="panel-body">
+            <section>
+               <table class="table table-bordered table-hover">
+                  <thead>
+                     <tr>
+                        <th>Task Name</th>
+                        <th>Task Description</th>
+                        <th>Assigner</th>
+                        <th>Priority</th>
+                        <th>Update Task</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {%for objs in obj_all%}
+                     <tr>
+                        <td>{{objs.name}}</td>
+                        <td>{{objs.desc}}</td>
+                        <td>{{objs.assigner}}</td>
+                        <td>{{objs.priority}}</td>
+                        <td><a href="/edit_task/{{objs.id}}" class="btn btn-primary" >Update Task</a></td>
+                     </tr>
+                     {%endfor%}                              
+                  </tbody>
+               </table>
+            </section>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

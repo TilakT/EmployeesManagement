@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Employee View{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-12">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            List of employees                      
+         </header>
+         <div class="panel-body">
+            <section id="unseen">
+               <a href="/create_employee/" class="btn btn-primary">Create</a>
+               <br>
+               <br>
+               <br>
+               <table class="table table-bordered table-striped table-hover">
+                  <thead>
+                     <tr>
+                        <th>Employee Name</th>
+                        <th>Email ID</th>
+                        <th>ID Card No</th>
+                        <th>Date of Joining</th>
+                        <th>Designation</th>
+                        <th>Edit/Delete</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {%for objs in obj%}
+                     <tr>
+                        <td>{{objs.username}}</td>
+                        <td>{{objs.email}}</td>
+                        <td>{{objs.id_card_no}}</td>
+                        <td>{{objs.date_of_joining}}</td>
+                        <td>{{objs.designation}}</td>
+                        <td>
+                           <a href='/admin_edit_emp/{{objs.id}}/' class="small_buttton btn btn-xs btn-primary small_button_style tr_view_edt">
+                           <span class="fa fa-edit"></span> 
+                           </a>   
+                           <a href="#" data-href="/delete_emp/{{objs.id}}" data-toggle="modal" data-target="#confirm-delete" class=" small_buttton btn btn-xs btn-danger small_button_style delete-confirmation tr_view_del" title="Delete" >
+                           <span class="fa fa-trash-o"></span> 
+                           </a>
+                        </td>
+                     </tr>
+                     {%endfor%}                              
+                  </tbody>
+               </table>
+            </section>
+         </div>
+      </section>
+   </div>
+</div>
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-body">
+            <h4 class="text-center">Please confirm deletion</h4>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-circle btn-xs btn-cancel" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-circle btn-xs btn-primary btn-ok">Yes</a>
+         </div>
+      </div>
+   </div>
+</div>
+{%endblock%}
+{% block js%}
+<script>
+   $('#confirm-delete').on('show.bs.modal', function(e) {
+          $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+     });
+</script>
+{%endblock%}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Employee Creation{% endblock %}
+{%block js%}
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/test_date_picker.js"></script>
+<script type="text/javascript">
+   $(function(){
+   
+       var nowTemp = new Date();
+       var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+   
+       var checkin = $('.dpd1').datepicker({
+           onRender: function(date) {
+               return date.valueOf() < now.valueOf() ? 'disabled' : '';
+           }
+       }).on('changeDate', function(ev) {
+               if (ev.date.valueOf() > checkout.date.valueOf()) {
+                   var newDate = new Date(ev.date)
+                   newDate.setDate(newDate.getDate() + 1);
+                   checkout.setValue(newDate);
+               }
+               checkin.hide();
+               $('.dpd2')[0].focus();
+           }).data('datepicker');
+       var checkout = $('.dpd2').datepicker({
+           onRender: function(date) {
+               return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+           }
+       })
+   });
+   
+   
+</script>
+{%endblock%}
+{% block content %}
+<div class="row">
+   <div class="col-sm-12">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            Employee Details
+         </header>
+         <div class="panel-body">
+            <form class="form-horizontal bucket-form" action="" method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label class="col-sm-2 control-label label_color">Name</label>
+                  <div class="col-sm-4">
+                     {{form.username}}
+                     {{form.username.errors}}
+                  </div>
+                  <label class="col-sm-2 control-label label_color">Email</label>
+                  <div class="col-sm-4">
+                     {{form.email}}
+                     {{form.email.errors}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label label_color">Gender</label>
+                  <div class="col-sm-4">
+                     {{form.gender}}
+                     {{form.gender.errors}}
+                  </div>
+                  <label class="col-sm-2 control-label label_color">Date of Birth</label>
+                  <div class="col-sm-4">
+                     {{form.date_of_birth}}
+                     {{form.date_of_birth.errors}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label label_color">Contact Number</label>
+                  <div class="col-sm-4">
+                     {{form.contact}}
+                     {{form.contact.errors}}
+                  </div>
+                  <label class="col-sm-2 control-label label_color">Alternative Contact Number</label>
+                  <div class="col-sm-4">
+                     {{form.alternative_contact}}
+                     {{form.alternative_contact.errors}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label label_color">Present Address</label>
+                  <div class="col-sm-4">
+                     {{form.present_address}}
+                     {{form.present_address.errors}}
+                  </div>
+                  <label class="col-sm-2 control-label label_color">Permanent Address</label>
+                  <div class="col-sm-4">
+                     {{form.permanent_address}}
+                     {{form.permanent_address.errors}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label label_color">Designation</label>
+                  <div class="col-sm-4">
+                     {{form.designation}}
+                     {{form.designation.errors}}
+                  </div>
+                  <label class="col-sm-2 control-label label_color">Date of Joining</label>
+                  <div class="col-sm-4">
+                     {{form.date_of_joining}}
+                     {{form.date_of_joining.errors}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-sm-2 control-label label_color">Profile Picture</label>
+                  <div class="col-sm-4">
+                     {{form.img}}
+                     {{form.img.errors}}
+                  </div>
+                  <label class="col-sm-2 control-label label_color">Blood Group</label>
+                  <div class="col-sm-4">
+                     {{form.blood_grp}}
+                     {{form.blood_grp.errors}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="col-sm-11">
+                     <button class="btn btn-primary btn-lg pull-right" type="submit" id="add" value="submit" title="Submit">Submit</button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

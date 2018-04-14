@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Employee Attendance{% endblock %}
+{%block css%}
+<link rel="stylesheet" type="text/css" href="/static/css/demo_page.css">
+<link rel="stylesheet" type="text/css" href="/static/css/demo_table.css">
+<link rel="stylesheet" type="text/css" href="/static/css/DT_bootstrap.css">
+{%endblock%}
+{% block js %}
+{{block.super}}
+<script type="text/javascript">
+   $(function(){    
+   
+       $('.approve').on('click',function(e){
+           e.preventDefault();
+           var id = $(this).attr('id');
+           
+           $.ajax({
+             type: "POST",
+             url: '/attd_view/',
+             data: {
+                   id: ''.concat(id),                
+                   csrfmiddlewaretoken: '{{csrf_token}}',
+                  },
+            success: function(data) {
+                   $('li#'+id).remove();
+                   $('tr#'+id).remove();
+                   $('.bg-important').text(data);
+                 },
+            error: function(xhr, textStatus, errorThrown) {
+                   alert(xhr.responseText);
+                 }
+             });
+       })
+   
+   
+   $(".disapprove").click(function(){
+       var uname = $(this).attr('uname');
+       $('#uname').text(uname);
+       var fromdt = $(this).attr('fromdt');
+       $('#fromdt').text(fromdt);
+       var todt = $(this).attr('todt');
+       $('#todt').text(todt);
+       var uid = $(this).attr('uid');
+       $('input[name="uid"]').val(uid);
+   });
+   
+   })
+   
+   
+</script>
+<SCRIPT language="javascript">
+   $(document).ready(function() {
+       $('#selectall').click(function(event) {  
+           if(this.checked) { 
+               $('.in_check').each(function() {
+                   this.checked = true;                
+               });
+           }else{
+               $('.in_check').each(function() { 
+                   this.checked = false;                        
+               });         
+           }
+       });
+       
+   });
+   
+      $(document).ready(function() {
+           $("button").click(function(){
+               var favorite = [];
+               $.each($("input[name='sport']:checked"), function(){            
+                   favorite.push($(this).val());
+               });
+               
+           });
+       });
+   
+   $("#ap").click(function(){
+       $("ap").hide();
+   });
+   
+   $("#wap").click(function(){
+       $("wap").show();
+   });
+   
+</SCRIPT>
+<script type="text/javascript" src="/static/js/dynamic_table_init.js"></script>
+<script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
+{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-3">
+      <section class="panel">
+         <div class="panel-body">
+            <a href="/attendance/"  class="btn btn-compose">
+            Compose Mail
+            </a>
+            <ul class="nav nav-pills nav-stacked mail-nav">
+               <li ><a href="/attd_view/"> <i class="fa fa-inbox"></i> Waiting for Approval <span class="label label-danger pull-right inbox-notification">{{obj|length}}</span></a></li>
+               <li><a href="/disapproved/"> <i class="fa fa-certificate"></i> Disapproved</a></li>
+               <li class="active"><a href="/approved/"> <i class="fa fa-envelope-o"></i> Approved</a></li>
+            </ul>
+         </div>
+      </section>
+   </div>
+   <div class="col-sm-9">
+      <section class="panel " id="ap">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            <h4 class="gen-case">Approved                       
+            </h4>
+         </header>
+         <div class="panel-body">
+            <div class="adv-table">
+               <table  class="display table table-striped table-inbox" id="dynamic-table">
+                  <thead>
+                     <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {%for objs in obj_all%}
+                     {% if objs.approved_or_not == True and  objs.waiting == False %}
+                     <tr >
+                        <td class="inbox-small-cells">
+                           <input type="checkbox" class="mail-checkbox" disabled>
+                        </td>
+                        <td class="inbox-small-cells" disabled><i class="fa fa-star"></i></td>
+                        <td class="view-message  dont-show"><a href="mail_view.html">{{objs.username}}</a></td>
+                        <td class="view-message ">
+                           <a href="/read/{{objs.id }}">{{objs.reason}}</a>
+                        </td>
+                        <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td>
+                        <td>{{objs.createdon}}</td>
+                     </tr>
+                     {%endif%}
+                     {%endfor%}
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}

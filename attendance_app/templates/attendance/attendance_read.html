@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Employee Attendance{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-3">
+      <section class="panel">
+         <div class="panel-body">
+            <a href="/attendance/"  class="btn btn-compose">
+            Compose Mail
+            </a>
+            <ul class="nav nav-pills nav-stacked mail-nav">
+               <li ><a href="/attd_view/"> <i class="fa fa-inbox"></i> Waiting for Approval <span class="label label-danger pull-right inbox-notification">9</span></a></li>
+               <li><a href="/disapproved/"> <i class="fa fa-certificate"></i> Disapproved</a></li>
+               <li><a href="/approved/"> <i class="fa fa-envelope-o"></i> Approved</a></li>
+            </ul>
+         </div>
+      </section>
+   </div>
+   <div class="col-sm-9">
+      <section class="panel">
+         <header class="panel-heading wht-bg">
+            <h4 class="gen-case"> View Mail
+            </h4>
+         </header>
+         <div class="panel-body ">
+            <div class="mail-sender">
+               <div class="row">
+                  <div class="col-md-8">
+                     <strong>{{obj_all.leave_type}}</strong>
+                  </div>
+                  <div class="col-md-4">
+                     <p class="date">{{obj_all.from_date}}  -  {{obj_all.to_date}}</p>
+                  </div>
+               </div>
+            </div>
+            <div class="view-mail">
+               {{obj_all.reason|safe}}
+            </div>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

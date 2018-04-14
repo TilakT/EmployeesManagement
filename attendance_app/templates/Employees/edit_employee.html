@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block title %}Employee Creation{% endblock %}
+{%block js%}
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/test_date_picker.js"></script>
+<script type="text/javascript">
+   $(function(){
+       window.prettyPrint && prettyPrint();
+       $('.default-date-picker').datepicker({
+           format: 'mm-dd-yyyy'
+       });
+       $('.dpYears').datepicker();
+       $('.dpMonths').datepicker();
+   
+   
+       var nowTemp = new Date();
+       var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+   
+       var checkin = $('.dpd1').datepicker({
+           onRender: function(date) {
+               return date.valueOf() < now.valueOf() ? 'disabled' : '';
+           }
+       }).on('changeDate', function(ev) {
+               if (ev.date.valueOf() > checkout.date.valueOf()) {
+                   var newDate = new Date(ev.date)
+                   newDate.setDate(newDate.getDate() + 1);
+                   checkout.setValue(newDate);
+               }
+               checkin.hide();
+               $('.dpd2')[0].focus();
+           }).data('datepicker');
+       var checkout = $('.dpd2').datepicker({
+           onRender: function(date) {
+               return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+           }
+       }).on('changeDate', function(ev) {
+               checkout.hide();
+           }).data('datepicker');
+   });
+   
+   
+</script>
+{%endblock%}    
+{% block content %}
+<div class="row">
+   <div class="col-md-12">
+      <section class="panel">
+         <div class="panel-body profile-information">
+            <div class="col-md-3">
+               <div class="profile-pic text-center">
+                  <img src="/media/{{obj.img}}" alt=""/>
+               </div>
+            </div>
+            <div class="col-md-9">
+               <div class="profile-desk">
+                  <h1>{{request.user.username}}</h1>
+                  <br>
+                  <br>
+                  <span>{{obj.designation}}</span>
+                  <br>                               
+                  <span>{{obj.email}}</span>
+               </div>
+            </div>
+         </div>
+      </section>
+   </div>
+   <div class="col-md-12">
+      <section class="panel">
+         <header class="panel-heading tab-bg-dark-navy-blue">
+            <ul class="nav nav-tabs nav-justified ">
+               <li class="active">
+                  <a data-toggle="tab" href="#pl">
+                  Profile Leaves
+                  </a>
+               </li>
+               <li>
+                  <a data-toggle="tab" href="#tl">
+                  Pending Leaves
+                  </a>
+               </li>
+               <li>
+                  <a data-toggle="tab" href="#job-history">
+                  Taken Leaves
+                  </a>
+               </li>
+               <li>
+                  <a data-toggle="tab" href="#contacts" class="contact-map">
+                  Contacts
+                  </a>
+               </li>
+            </ul>
+         </header>
+         <div class="panel-body">
+            <div class="tab-content tasi-tab">
+               <div id="pl" class="tab-pane active">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="recent-act">
+                           <div class="panel-body">
+                              <form class="form-horizontal bucket-form" action="" method="POST" enctype="multipart/form-data">
+                                 {% csrf_token %}
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-4">
+                                       {{form.username}}
+                                       {{form.username.errors}}
+                                    </div>
+                                    <label class="col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-4">
+                                       {{form.email}}
+                                       {{form.email.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Gender</label>
+                                    <div class="col-sm-4">
+                                       {{form.gender}}
+                                       {{form.gender.errors}}
+                                    </div>
+                                    <label class="col-sm-2 control-label">Date of Birth</label>
+                                    <div class="col-sm-4">
+                                       {{form.date_of_birth}}
+                                       {{form.date_of_birth.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Contact Number</label>
+                                    <div class="col-sm-4">
+                                       {{form.contact}}
+                                       {{form.contact.errors}}
+                                    </div>
+                                    <label class="col-sm-2 control-label">Alternative Contact Number</label>
+                                    <div class="col-sm-4">
+                                       {{form.alternative_contact}}
+                                       {{form.alternative_contact.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Present Address</label>
+                                    <div class="col-sm-4">
+                                       {{form.present_address}}
+                                       {{form.present_address.errors}}
+                                    </div>
+                                    <label class="col-sm-2 control-label">Permanent Address</label>
+                                    <div class="col-sm-4">
+                                       {{form.permanent_address}}
+                                       {{form.permanent_address.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Designation</label>
+                                    <div class="col-sm-4">
+                                       {{form.designation}}
+                                       {{form.designation.errors}}
+                                    </div>
+                                    <label class="col-sm-2 control-label">ID Card Number</label>
+                                    <div class="col-sm-4">
+                                       {{form.id_card_no}}
+                                       {{form.id_card_no.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Date of Joining</label>
+                                    <div class="col-sm-4">
+                                       {{form.date_of_joining}}
+                                       {{form.date_of_joining.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Profile Image</label>
+                                    <div class="col-sm-4">
+                                       {{form.img}}
+                                       {{form.img.errors}}
+                                    </div>
+                                    <label class="col-sm-2 control-label">Blood Group</label>
+                                    <div class="col-sm-4">
+                                       {{form.blood_grp}}
+                                       {{form.blood_grp.errors}}
+                                    </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-sm-10">
+                                       <button class="btn btn-primary pull-right" type="submit" id="add" value="submit" title="Submit">Submit</button>
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div id="tl" class="tab-pane ">
+                  <div class="position-center">
+                     <div class="prf-contacts sttng">
+                        <table class="table table-bordered">
+                           <thead>
+                              <th>WorkFromHome</th>
+                              <th>Casual Leaves</th>
+                              <th>Sick Leaves</th>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>{{taken_wh}}</td>
+                                 <td>{{taken_cl}}</td>
+                                 <td>{{taken_sl}}</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+               <div id="job-history" class="tab-pane ">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <table class="table table-bordered">
+                           <thead>
+                              <th>WORK FROM HOME</th>
+                              <th>CASUAL LEAVES</th>
+                              <th>SICK LEAVES</th>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>{{attendance_wh}}</td>
+                                 <td>{{attendance_cl}}</td>
+                                 <td>{{attendance_sl}}</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+               <div id="contacts" class="tab-pane ">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="prf-contacts">
+                           <h2> <span><i class="fa fa-map-marker"></i></span>Present Address</h2>
+                           <div class="location-info">
+                              <p>{{obj.present_address}}</p>
+                              <br>           
+                           </div>
+                           <h2> <span><i class="fa fa-map-marker"></i></span>Permanent Address</h2>
+                           <div class="location-info">
+                              <p>{{obj.permanent_address}}</p>
+                           </div>
+                           <h2> <span><i class="fa fa-phone"></i></span> contacts</h2>
+                           <div class="location-info">
+                              <p>Mobile No    : {{obj.contact}} <br>
+                              <p>Alternative Mobile No    : {{obj.alternative_contact}} <br>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-md-6">
+                        <div id="map-canvas"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-12">
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

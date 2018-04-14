@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Update Task{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-12">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            Update Task                      
+         </header>
+         <div class="panel-body">
+            <section id="unseen">
+               <form action="" method="POST">
+                  {%csrf_token%}
+                  <table class="table table-bordered table-striped table-condensed">
+                     <thead>
+                        <tr>
+                           <th class="col-sm-1">#</th>
+                           <th class="col-sm-2">Task Name</th>
+                           <th class="col-sm-3">Task Description</th>
+                           <th class="col-sm-2">Assigner</th>
+                           <th class="col-sm-1">Priority</th>
+                           <th class="col-sm-1">Status</th>
+                           <th class="col-sm-2">Status</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {%for task in obj_all%}
+                        <tr>
+                           <td class="col-sm-1">{{forloop.counter}}</td>
+                           <td class="col-sm-2">{{task.name}}</td>
+                           <td class="col-sm-3">{{task.desc}}</td>
+                           <td class="col-sm-2">{{task.assigner}}</td>
+                           <td class="col-sm-1">{{task.priority}}</td>
+                           <td class="col-sm-1">{{form.work_in_task}}</td>
+                           <td class="col-sm-2">{{form.work_in_status}}</td>
+                        </tr>
+                        {%endfor%}                              
+                     </tbody>
+                  </table>
+                  <button class="btn btn-primary" type="submit">Submit</button>
+               </form>
+            </section>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}
+<!-- End-of-File -->

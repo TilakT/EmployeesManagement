@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <style type="text/css">
+         @page {
+         size: a4 landscape;
+         margin: 1.5cm;top: 15pt;bottom: 15pt;
+         @frame client_logo {           
+         -pdf-frame-content: client_logo;
+         top: 10pt;left: 40pt;
+         }
+         @frame company_logo {           
+         -pdf-frame-content: company_logo;
+         top: 10pt;left: 720pt;
+         }              
+         @frame page_number {           
+         -pdf-frame-content: page_number;
+         left: 770pt; width: 512pt; top: 552pt; height: 1cm;
+         }
+         @frame copyright {           
+         -pdf-frame-content: copyright;
+         left: 40pt; width: 512pt; top: 552pt; height: 1cm;
+         }
+         @frame h_hr {           
+         -pdf-frame-content: h_hr;
+         left: 40pt; top: 50pt; height: 1cm; margin-bottom: 5pt;
+         right: 40pt;
+         }
+         @frame f_hr {           
+         -pdf-frame-content: f_hr;
+         left: 40pt; top: 535pt; height: 1cm;right: 40pt; 
+         margin-top: 10pt;
+         }
+         }
+         .table>thead[class='test-thead']>*{
+         background-color: #000000;
+         color: #fff;
+         height: 100px;
+         }
+         tbody>tr>td{ word-break: break-all;word-wrap: break-word;}
+         table{
+         table-layout: fixed;
+         -pdf-keep-in-frame-mode: truncate;
+         }
+         h1,h2,h3 {            
+         color: #000000;
+         }  
+         .table >tbody>tr>td{
+         border-color: black;
+         padding: 2px;
+         }
+         .table >thead>tr>th{
+         border-color: black;
+         padding: 2px;
+         }
+         .displayed {
+         display: block; margin-left: auto; margin-right: auto;
+         }
+         img {
+         zoom: 80%;
+         }
+         .Sunday > td,.Saturday > td  {
+         color: #fff;
+         background-color: #000000;
+         }
+      </style>
+   </head>
+   <body>
+      <div id='frameBody'>
+         <br>
+         <h1 align="center" style="font-size:32px;">Company Attendance</h1>
+         <br>
+         <table>
+            <tr>
+               <td align='left'>
+                  <h1>{{this_month}}, {{this_year}}</h1>
+               </td>
+               <td align='right'>
+                  <h1>Total Working Days: {{nodw}}</h1>
+               </td>
+            </tr>
+         </table>
+         <br>
+         <table class='table' border='1'>
+            <tr style='color:#fff;background-color:#000000;font-size:14px;padding-top:4px;'>
+               <th>Employee Name</th>
+               <th>Count</th>
+            </tr>
+            {% for k, v in dict.items %}
+            <tr style="font-size:12px;text-align:center;">
+               <td>{{k.username.title}}</td>
+               <td>{{v}}</td>
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+      <div id='h_hr'>
+         <hr color='#000000' size='2'>
+      </div>
+      <div id='f_hr'>
+         <hr color='#000000' size='2'>
+      </div>
+      <div id='copyright'>
+         <p>
+            &copy; {%now "Y"%} .  
+         </p>
+      </div>
+      <div id="page_number">
+         Page 
+         <pdf:pagenumber/>
+      </div>
+   </body>
+</html>

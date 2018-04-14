@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Assign Task{% endblock %}
+{%block css%}
+{%endblock%}
+{%block js%}
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+   $(function() {
+     tinyMCE.init({
+         mode:"textareas",
+         width : "430px",
+         height:"100px"
+     });  
+     });
+</script>
+{%endblock%}
+{% block content %}
+<div class="col-lg-12">
+   <section class="panel panel-primary">
+      <header class="panel-heading">
+         Assign Task
+      </header>
+      <div class="panel-body">
+         <div class="position-center">
+            <form class="form-horizontal" role="form" method="POST" action="">
+               {%csrf_token%}
+               <div class="form-group">
+                  <label class="col-sm-3">Assigned To</label>
+                  <div class="col-lg-9">
+                     {{form.assigned.errors}}
+                     {{form.assigned}}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label  class="col-sm-3">Task Name</label>
+                  <div class="col-lg-9">
+                     {{form.task_name.errors}}                
+                     {{form.task_name}}                
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label  class="col-sm-3">Task Description</label>
+                  <div class="col-lg-9">
+                     {{form.desc.errors}}                
+                     {{form.desc}}                
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label  class="col-sm-3">Priority</label>
+                  <div class="col-lg-9">
+                     {{form.priority.errors}}                
+                     {{form.priority}}                
+                  </div>
+               </div>
+               <div class="form-group pull-right">
+                  <div class="col-lg-10 ">
+                     <button type="submit" class="btn btn-primary">Assign</button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </section>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

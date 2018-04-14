@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block title %}Employee Attendance{% endblock %}
+{%block css%}
+<style type="text/css">
+   .no_of_days{
+   margin-left: 21%;
+   margin-bottom: 3%;
+   }
+   .approve_btn{
+   margin-left: 15%;
+   }
+   .diapprove_btn{
+   margin-left: 3%;
+   }
+   .user_name{
+   margin-left: 15%;
+   font-size: 12px;
+   color: #000;
+   font-style: bold;
+   text-align: center;
+   }
+   .no_of_days_leaves{
+   font-size: 14px;
+   color: #000;
+   text-align: center;
+   }
+   .line_break{
+   color: #AB47BC;
+   }
+   .modal_username{
+   font-size: 25px;
+   color: #000;
+   }
+   .modal_no_days{
+   font-size: 17px;
+   color: #000;  
+   }
+   .modal_reason{
+   font-size: 19px;
+   color: #000;
+   }
+</style>
+{%endblock%}
+{%load calculate_days%}
+{%block notification%}
+{%if request.user.is_superuser%}
+<div class="nav notify-row" id="top_menu">
+   <ul class="nav top-menu">
+      <li id="header_inbox_bar" class="dropdown">
+         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+         <i class="fa fa-envelope-o"></i>
+         {%if obj%}
+         <span class="badge bg-important">{{obj|length}}</span>
+         {%endif%}
+         </a>
+         <ul class="dropdown-menu extended inbox">
+            {%for objs in obj%}
+            <li id="{{objs.id}}">
+               <span >
+               <span class="photo">
+               {%if objs.username.img%}
+               <img alt="photo" src="/media/{{objs.username.img}}" class="img-circle" height="50" width="50">
+               {%else%}    
+               <img alt="photo" src="/static/img/logo.jpg" class="img-circle" height="50" width="50">
+               {%endif%}                          
+               </span>
+               <span class="subject">
+                  <span class="from user_name">{{objs.username.username}}</span>
+                  <br>
+                  {%if not objs.one_date%}                                            
+                  <p class="message no_of_days no_of_days_leaves" title="{{objs.from_date}} - {{objs.to_date}}">
+                     {{ objs.from_date|calculate_days:objs.to_date }} days Leave
+                  </p>
+                  {%else%}
+                  <p class="message no_of_days no_of_days_leaves" title="">
+                     {{objs.one_date}} Leave
+                  </p>
+                  {%endif%} 
+                  <button class="approve_btn approve btn btn-xs btn-primary" id="{{objs.id}}">Approve</button>
+                  <span>
+                  {%if not objs.one_date%}
+                  <button class="diapprove_btn disapprove btn btn-xs btn-primary pull-right" data-toggle="modal" data-target="#myModal" uname="{{objs.username.username}}" fromdt="{{objs.from_date}}" todt="{{objs.to_date}}" uid="{{objs.id}}" noday="{{ objs.from_date|calculate_days:objs.to_date }}" reason="{{objs.reason}}">Disapprove</button>
+                  {%else%}
+                  <button class="diapprove_btn disapprove btn btn-primary pull-right" data-toggle="modal" data-target="#myModal" uname="{{objs.username.username}}" fromdt="{{objs.from_date}}" todt="{{objs.to_date}}" uid="{{objs.id}}" noday="{{ objs.one_date}}">Disapprove</button>
+                  {%endif%}
+                  </span>
+               </span>
+               <p class="line_break">------------------------------------------------------------</p>
+               <br>
+            </li>
+            {%endfor%}                          
+            <li>
+               <a href="#">See all messages</a>
+            </li>
+         </ul>
+      </li>
+   </ul>
+</div>
+{%endif%}
+{%endblock%}
+{% block js %}
+{{block.super}}
+<script type="text/javascript">
+   $(function(){    
+   
+       $('.approve').on('click',function(e){
+           e.preventDefault();
+           var id = $(this).attr('id');
+           
+           $.ajax({
+             type: "POST",
+             url: '/attd_view/',
+             data: {
+                   id: ''.concat(id),                
+                   csrfmiddlewaretoken: '{{csrf_token}}',
+                  },
+            success: function(data) {
+                   $('li#'+id).remove();
+                   $('tr#'+id).remove();
+                   $('.bg-important').text(data);
+                 },
+            error: function(xhr, textStatus, errorThrown) {
+                   alert(xhr.responseText);
+                 }
+             });
+       })
+   
+   
+   $(".disapprove").click(function(){
+       var uname = $(this).attr('uname');
+       $('#uname').text(uname);
+       var fromdt = $(this).attr('fromdt');
+       $('#fromdt').text(fromdt);
+       var todt = $(this).attr('todt');
+       $('#todt').text(todt);
+       var uid = $(this).attr('uid');
+       $('input[name="uid"]').val(uid);
+   });
+   
+   })
+   
+   
+</script>
+<SCRIPT language="javascript">
+   $(document).ready(function() {
+       $('#selectall').click(function(event) {  //on click 
+           if(this.checked) { // check select status
+               $('.in_check').each(function() { //loop through each checkbox
+                   this.checked = true;  //select all checkboxes with class "in_check"               
+               });
+           }else{
+               $('.in_check').each(function() { //loop through each checkbox
+                   this.checked = false; //deselect all checkboxes with class "in_check"                       
+               });         
+           }
+       });
+       
+   });
+   
+      $(document).ready(function() {
+           $("button").click(function(){
+               var favorite = [];
+               $.each($("input[name='sport']:checked"), function(){            
+                   favorite.push($(this).val());
+               });
+           });
+       });
+   $("#ap").click(function(){
+       $("ap").hide();
+   });
+   
+   $("#wap").click(function(){
+       $("wap").show();
+   });
+   
+</SCRIPT>
+{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-3">
+      <section class="panel">
+         <div class="panel-body">
+            <a href="/attendance/"  class="btn btn-compose">
+            Compose Mail
+            </a>
+            <ul class="nav nav-pills nav-stacked mail-nav">
+               <li class="active"><a href="/attd_view/"> <i class="fa fa-inbox"></i> Waiting for Approval <span class="label label-danger pull-right inbox-notification">{{obj|length}}</span></a></li>
+               <li><a href="/disapproved/"> <i class="fa fa-certificate"></i> Disapproved</a></li>
+               <li><a href="/approved/"> <i class="fa fa-envelope-o"></i> Approved</a></li>
+            </ul>
+         </div>
+      </section>
+   </div>
+   <div class="col-sm-9">
+      <section class="panel panel-primary" id="wap">
+         <header class="panel-heading">
+            <h4 class="gen-case">Waiting for Approval                       
+            </h4>
+         </header>
+         <div class="panel-body">
+            <form action='' method='post'>
+               {% csrf_token %}
+               <div class="adv-table">
+                  <table  class="display table table-striped table-inbox" id="dynamic-table">
+                     <thead>
+                        <tr>
+                           {%if request.user.is_superuser%}           
+                           <th>
+                              <input type="checkbox" id="selectall" name='selectall'/>
+                           <th>                                      
+                           </th>
+                           <th>
+                           </th>
+                           <th class="col-sm-6">
+                              <select name='approve_all' required class="form-control">
+                                 <option value=''>---------------------</option>
+                                 <option value='approve'>Approve</option>
+                              </select>
+                           </th>
+                           <th>
+                              <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                           </th>
+                           </th>
+                           {%else%}
+                           <th></th>
+                           {%endif%}
+                           <th></th>
+                           <th></th>
+                           <th></th>
+                           <th></th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {%for objs in obj%}
+                        {% if objs.waiting == True %}
+                        <tr >
+                           {%if request.user.is_superuser%}                            
+                           <td>
+                              <input type="checkbox" class="in_check" value="{{objs.id}}" name="sport"/>                                  
+                           </td>
+                           {%else%}
+                           <td class="inbox-small-cells">
+                              <input type="checkbox" class="mail-checkbox" disabled>
+                           </td>
+                           {%endif%}
+                           <td class="inbox-small-cells" disabled><i class="fa fa-star"></i></td>
+                           <td class="view-message  dont-show"><a href="mail_view.html">{{objs.username}}</a></td>
+                           <td class="view-message ">
+                              <a href="/read/{{objs.id }}">{{objs.reason}}</a>
+                           </td>
+                           {%if request.user.is_superuser%}
+                           <td class="view-message  inbox-small-cells">
+                              <a class="diapprove_btn disapprove" data-toggle="modal" data-target="#myModal" uname="{{objs.username.username}}" fromdt="{{objs.from_date}}" todt="{{objs.to_date}}" uid="{{objs.id}}"><i class="fa fa-mail-reply"></i></a>
+                           </td>
+                           {%endif%}
+                        </tr>
+                        {%endif%}
+                        {%endfor%}
+                     </tbody>
+                  </table>
+               </div>
+            </form>
+         </div>
+      </section>
+   </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title text-center modal_username" id='uname'></h3>
+            <strong>
+               FROM: 
+               <h4 class="text-left" id='fromdt'></h4>
+            </strong>
+            <br>
+            <strong>
+               TO: 
+               <h4 class="modal-title text-left" id='todt'></h4>
+            </strong>
+            <br>
+         </div>
+         <form action="" method="POST">
+            {%csrf_token%}
+            <div class="modal-body">
+               <input type='hidden' name='uid' value=''>
+               <textarea class="form-control" cols="65" id="id_disapprove_reason" name="disapprove_reason" placeholder="Dis Approve Reason" rows="5" required></textarea>
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary" >Submit</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

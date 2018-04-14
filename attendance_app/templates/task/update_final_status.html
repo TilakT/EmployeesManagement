@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Update Task{% endblock %}
+{% block content %}
+<div class="row">
+   <div class="col-sm-12">
+      <section class="panel panel-primary">
+         <header class="panel-heading">
+            Update Task                      
+         </header>
+         <div class="panel-body">
+            <section id="unseen">
+               <form action="" method="POST">
+                  {%csrf_token%}
+                  <table class="table table-bordered table-striped table-condensed">
+                     <thead>
+                        <tr>
+                           <th class="col-sm-1">#</th>
+                           <th class="col-sm-2">Task Name</th>
+                           <th class="col-sm-3">Task Description</th>
+                           <th class="col-sm-2">Assigner</th>
+                           <th class="col-sm-1">Priority</th>
+                           <th class="col-sm-1">Status</th>
+                           <th class="col-sm-2">Status</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td class="col-sm-1">1</td>
+                           <td class="col-sm-2">{{obj.name}}</td>
+                           <td class="col-sm-3">{{obj.desc}}</td>
+                           <td class="col-sm-2">{{obj.assigner}}</td>
+                           <td class="col-sm-1">{{obj.priority}}</td>
+                           <td class="col-sm-1">{{form.completed_task}}</td>
+                           <td class="col-sm-2">{{form.complete_status}}</td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <button class="btn btn-primary" type="submit">Submit</button>
+               </form>
+            </section>
+         </div>
+      </section>
+   </div>
+</div>
+{%endblock%}
+<!-- End-Of-File -->

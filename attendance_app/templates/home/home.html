@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block css%}
+<style type="text/css">
+   .user_name{
+   margin-left: 15%;
+   font-size: 12px;
+   color: #000;
+   font-style: bold;
+   text-align: center;
+   }
+   .no_of_days_leaves{
+   font-size: 14px;
+   color: #000;
+   text-align: center;
+   }
+   .line_break{
+   color: #AB47BC;
+   }
+   .modal_username{
+   font-size: 25px;
+   color: #000;
+   }
+   .modal_no_days{
+   font-size: 17px;
+   color: #000;  
+   }
+   .modal_reason{
+   font-size: 19px;
+   color: #000;
+   }
+</style>
+{%endblock%}
+{%load calculate_days%}
+{%block notification%}
+{%if request.user.is_superuser%}
+<div class="nav notify-row" id="top_menu">
+   <ul class="nav top-menu">
+      <li id="header_inbox_bar" class="dropdown">
+         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+         <i class="fa fa-bell-o"></i>
+         {%if obj%}
+         <span class="badge bg-important">{{obj|length}}</span>
+         {%endif%}
+         </a>            
+         <ul class="dropdown-menu extended inbox " style="height:250px;overflow:auto;">
+            {%for objs in obj%}
+            <li id="{{objs.id}}">
+               <span >
+               <span class="photo">
+               {%if objs.username.img%}
+               <img alt="photo" src="/media/{{objs.username.img}}" class="img-circle" height="50" width="50">
+               {%else%}    
+               <img alt="photo" src="/static/img/logo.jpg" class="img-circle" height="50" width="50">
+               {%endif%}                          
+               </span>
+               <span class="subject">
+                  <span class="from user_name">{{objs.username.username}}</span>
+                  <br>
+                  {%if not objs.one_date%}                                           
+                  <p class="message no_of_days no_of_days_leaves" title="{{objs.from_date}} - {{objs.to_date}}">
+                     {{ objs.from_date|calculate_days:objs.to_date }} days Leave
+                  </p>
+                  {%else%}
+                  <p class="message no_of_days no_of_days_leaves" title="">
+                     {{objs.one_date}} Leave
+                  </p>
+                  {%endif%}
+                  <br>                                
+                  <button class="approve_btn approve btn btn-xs btn-primary" id="{{objs.id}}">Approve</button>
+                  <span>
+                  {%if not objs.one_date%}
+                  <button class="diapprove_btn disapprove btn btn-xs btn-primary pull-right" data-toggle="modal" data-target="#myModal" uname="{{objs.username.username}}" fromdt="{{objs.from_date}}" todt="{{objs.to_date}}" uid="{{objs.id}}" noday="{{ objs.from_date|calculate_days:objs.to_date }}" reason="{{objs.reason}}">Disapprove</button>
+                  {%else%}
+                  <button class="diapprove_btn disapprove btn btn-xs btn-primary pull-right" data-toggle="modal" data-target="#myModal" uname="{{objs.username.username}}" fromdt="{{objs.from_date}}" todt="{{objs.to_date}}" uid="{{objs.id}}" noday="{{ objs.one_date}}">Disapprove</button>
+                  {%endif%}
+                  </span>
+               </span>
+               <hr>
+               <br>
+            </li>
+            {%endfor%}
+         </ul>
+      </li>
+   </ul>
+</div>
+{%endif%}
+{%endblock%}
+{% block js %}
+{{block.super}}
+<script type="text/javascript">
+   $(function(){    
+   
+       $('.approve').on('click',function(e){
+           e.preventDefault();
+           var id = $(this).attr('id');
+           
+           $.ajax({
+             type: "POST",
+             url: '/attd_view/',
+             data: {
+                   id: ''.concat(id),                
+                   csrfmiddlewaretoken: '{{csrf_token}}',
+                  },
+            success: function(data) {
+                   $('li#'+id).remove();
+                   $('tr#'+id).remove();
+                   $('.bg-important').text(data);
+                 },
+            error: function(xhr, textStatus, errorThrown) {
+                   alert(xhr.responseText);
+                 }
+             });
+       })
+   
+   
+   $(".disapprove").click(function(){
+       var uname = $(this).attr('uname');
+       $('#uname').text(uname);
+       var fromdt = $(this).attr('fromdt');
+       $('#fromdt').text(fromdt);
+       var todt = $(this).attr('todt');
+       $('#todt').text(todt);
+       var uid = $(this).attr('uid');
+       $('input[name="uid"]').val(uid);
+       var noday = $(this).attr('noday');
+       $('#noday').text(noday);
+       var reason = $(this).attr('reason');    
+       $('#reason').text(reason);
+   });
+   
+   })
+   
+   
+</script>
+<SCRIPT language="javascript">
+   $(document).ready(function() {
+       $('#selectall').click(function(event) {  
+           if(this.checked) { 
+               $('.in_check').each(function() { 
+                   this.checked = true;            
+               });
+           }else{
+               $('.in_check').each(function() { 
+                   this.checked = false;                   
+               });         
+           }
+       });
+       
+   });
+   
+      $(document).ready(function() {
+           $("button").click(function(){
+               var favorite = [];
+               $.each($("input[name='sport']:checked"), function(){            
+                   favorite.push($(this).val());
+               });
+           });
+       });   
+   
+</SCRIPT>
+<script type="text/javascript" src="/static/js/css3clock.js"></script>
+{% endblock %}
+{% block content %}
+{%if request.user.is_superuser%}
+<div class="row">
+   <div class="col-md-4">
+      <a href="/attd_view/">
+         <div class="mini-stat clearfix">
+            <span class="mini-stat-icon orange"><i class="fa fa-gavel"></i></span>
+            <div class="mini-stat-info">
+               {%if obj%}
+               <span>{{obj|length}}</span>
+               {%else%}
+               <span>0</span>
+               {%endif%}
+               Waiting for Approval
+            </div>
+         </div>
+      </a>
+   </div>
+   <div class="col-md-4">
+      <a href="/approved/">
+         <div class="mini-stat clearfix">
+            <span class="mini-stat-icon tar"><i class="fa fa-tag"></i></span>
+            <div class="mini-stat-info">
+               {%if obj_ap%}
+               <span>{{obj_ap|length}}</span>
+               {%else%}
+               <span>0</span>
+               {%endif%}
+               Approved
+            </div>
+         </div>
+      </a>
+   </div>
+   <div class="col-md-4">
+      <a href="/disapproved/">
+         <div class="mini-stat clearfix">
+            <span class="mini-stat-icon pink"><i class="fa fa-money"></i></span>
+            <div class="mini-stat-info">
+               {%if obj_dsp%}
+               <span>{{obj_dsp|length}}</span>
+               {%else%}
+               <span>0</span>
+               {%endif%}
+               Disapproved
+            </div>
+         </div>
+      </a>
+   </div>
+</div>
+{%endif%}
+<div class="row">
+   <div class="col-md-8">
+      <div class="event-calendar clearfix">
+         <div class="col-lg-5 event-list-block">
+            <div class="cal-day" >
+               <span>{{time}}</span>
+               {{weekday}}
+            </div>
+            <ul class="event-list">
+               {% for usr in user%}
+               {%if usr.date_of_birth.day == time.day and usr.date_of_birth.month == time.month%}
+               <li>{{usr.username}} Birthday</li>
+               {%endif%}                    
+               {%endfor%}
+            </ul>
+         </div>
+         <div class="col-lg-7 calendar-block">
+            <div class="cal1 ">
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-4">
+      <div class="profile-nav alt">
+         <section class="panel">
+            <div class="user-heading alt clock-row terques-bg">
+               <h1>{{time}}</h1>
+               <p class="text-left">{{weekday}}</p>
+               <p class="text-left">{{hour}}</p>
+            </div>
+            <ul id="clock">
+               <li id="sec"></li>
+               <li id="hour"></li>
+               <li id="min"></li>
+            </ul>
+         </section>
+      </div>
+   </div>
+</div>
+<br>
+<br>
+<section class="panel">
+   <header class="panel-heading">
+      Calender                        
+   </header>
+   <div class="panel-body">
+      <div class="row">
+         <aside class="col-lg-12">
+            <div id="calendar" class="has-toolbar"></div>
+         </aside>
+      </div>
+   </div>
+</section>
+<div id="myModal" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title text-center modal_username" id='uname'></h3>
+            <strong>
+               FROM: 
+               <h4 class="text-left" id='fromdt'></h4>
+            </strong>
+            <br>
+            <strong>
+               TO: 
+               <h4 class="modal-title text-left" id='todt'></h4>
+            </strong>
+            <br>
+            <Strong class="text-left modal_no_days">
+               No of Days : 
+               <h4 class="text-left" id="noday"></h4>
+            </Strong>
+            <br>
+            <Strong  class="text-left modal_reason" >
+               Reason : 
+               <h4 id='reason'></h4>
+            </Strong>
+         </div>
+         <form action="" method="POST">
+            {%csrf_token%}
+            <div class="modal-body">
+               <input type='hidden' name='uid' value=''>
+               <textarea class="form-control" cols="65" id="id_disapprove_reason" name="disapprove_reason" placeholder="Dis Approve Reason" rows="5" required></textarea>
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary" >Submit</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{%block calender%}
+<script type="text/javascript">
+   var Script = function () {
+       $('#external-events div.external-event').each(function() {
+           var eventObject = {
+               title: $.trim($(this).text()) 
+           };
+           $(this).data('eventObject', eventObject);
+           $(this).draggable({
+               zIndex: 999,
+               revert: true,      
+               revertDuration: 0 
+           });
+   
+       });
+   
+       var date = new Date();
+       var d = date.getDate();
+       var m = date.getMonth();
+       var y = date.getFullYear();
+   
+       $('#calendar').fullCalendar({
+           header: {
+               left: 'prev,next today',
+               center: 'title',
+               right: 'month,basicWeek,basicDay'
+           },
+           editable: true,
+           droppable: true, 
+           drop: function(date, allDay) {
+               var originalEventObject = $(this).data('eventObject');
+   
+               var copiedEventObject = $.extend({}, originalEventObject);
+   
+               copiedEventObject.start = date;
+               copiedEventObject.allDay = allDay;
+               $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+               if ($('#drop-remove').is(':checked')) {
+                   $(this).remove();
+               }
+   
+           },
+           events: [
+              {%for obj in events%}
+               {
+   
+                   title: '{{obj.event_name}}',
+                   start: new Date('{{obj.date}}')               
+               },
+               {%endfor%}
+               
+           ]
+       });
+   
+   
+   }();
+</script>
+{%endblock%}
+{%endblock%}
+<!-- End-Of-File -->
